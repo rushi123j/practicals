@@ -1,0 +1,56 @@
+// 1. Connect to MongoDB and create a new database called "schoolDB"
+use schoolDB
+
+// 2. Create a collection named "students" and insert sample documents
+
+
+
+// Batch insert documents
+db.students.insertMany([
+    { name: "Ananya", age: 12, grade: "7th" },
+    { name: "Rajesh", age: 14, grade: "9th" },
+    { name: "Priya", age: 15, grade: "10th" },
+    { name: "Suresh", age: 11, grade: "6th" },
+    { name: "Meena", age: 13, grade: "8th" }
+])
+
+// 3. Removing documents
+// Remove a single document where name is "Rajesh"
+db.students.deleteOne({ name: "Rajesh" })
+
+// Remove multiple documents where grade is "6th"
+db.students.deleteMany({ grade: "6th" })
+
+// 4. Updating documents
+
+// a) Document replacement - Replace the document of "Priya" with a new document
+db.students.replaceOne(
+    { name: "Priya" },
+    { name: "Priya", age: 16, grade: "11th" }
+)
+
+// b) Updating using modifiers - Increase the age of "Ananya" by 1
+db.students.updateOne(
+    { name: "Ananya" },
+    { $inc: { age: 1 } }
+)
+
+// c) Upsert - If a document with name "Rahul" doesn't exist, insert a new one; otherwise, update
+db.students.updateOne(
+    { name: "Rahul" },
+    { $set: { age: 14, grade: "9th" } },
+    { upsert: true }
+)
+
+// d) Updating multiple documents - Set the grade to "8th" for all students aged 13 or older
+db.students.updateMany(
+    { age: { $gte: 13 } },
+    { $set: { grade: "8th" } }
+)
+
+// e) Returning updated documents - Find and update "Suresh"'s age to 12, and return the updated document
+db.students.findOneAndUpdate(
+    { name: "Suresh" },
+    { $set: { age: 12 } },
+    { returnNewDocument: true }
+)

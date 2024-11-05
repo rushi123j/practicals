@@ -1,0 +1,103 @@
+//   MapReduce function
+
+
+// Create the collection 'customer_orders' and insert sample documents
+db.customer_orders.insertMany([
+    { cust_id: "Ravi123", amount: 500, status: "Confirmed" },
+    { cust_id: "Sneha456", amount: 750, status: "Pending" },
+    { cust_id: "Amit789", amount: 200, status: "Confirmed" },
+    { cust_id: "Ravi123", amount: 400, status: "Confirmed" },
+    { cust_id: "Sneha456", amount: 300, status: "Cancelled" },
+    { cust_id: "Rajesh321", amount: 600, status: "Confirmed" },
+    { cust_id: "Anjali987", amount: 150, status: "Pending" }
+]);
+
+
+// Define the map function
+var mapFunction = function() {
+    emit(this.cust_id, this.amount);
+};
+
+// Define the reduce function
+var reduceFunction = function(keyCustId, valuesAmounts) {
+    return Array.sum(valuesAmounts);
+};
+
+// Run Map-Reduce on 'customer_orders' collection
+db.customer_orders.mapReduce(
+    mapFunction,
+    reduceFunction,
+    { out: "total_spent_by_customer" }
+);
+
+// Query the results
+db.total_spent_by_customer.find();
+
+
+
+
+
+
+
+
+
+
+//     Aggregation function
+
+// Aggregation pipeline to calculate the total amount by customer for "Confirmed" orders
+db.customer_orders.aggregate([
+    { $match: { status: "Confirmed" } },
+    { $group: { _id: "$cust_id", total_spent: { $sum: "$amount" } } }
+]);
+
+
+
+
+
+
+
+
+//     Index
+
+
+// Single field index
+// Create a single-field index on 'cust_id'
+db.customer_orders.createIndex({ cust_id: 1 });
+
+// Example query using 'cust_id' index
+db.customer_orders.find({ cust_id: "Ravi123" });
+
+
+
+// Compound index
+// Create a compound index on 'cust_id' and 'status'
+db.customer_orders.createIndex({ cust_id: 1, status: 1 });
+
+// Example query using the compound index
+db.customer_orders.find({ cust_id: "Sneha456", status: "Pending" });
+
+
+
+// Multikey index
+// Add 'products' field with arrays
+db.customer_orders.updateMany(
+    { },
+    { $set: { products: ["item1", "item2"] } }
+);
+
+// Create a multikey index on 'products'
+db.customer_orders.createIndex({ products: 1 });
+
+// Query to find orders containing a specific product
+db.customer_orders.find({ products: "item1" });
+
+
+
+
+// Dropping indexes
+// Drop the single-field index on 'cust_id'
+db.customer_orders.dropIndex("cust_id_1");
+
+// Drop all indexes on 'customer_orders' collection
+db.customer_orders.dropIndexes();
+

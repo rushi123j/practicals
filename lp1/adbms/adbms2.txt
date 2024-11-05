@@ -1,0 +1,80 @@
+// Use or create a database
+use studentRecords;
+
+// Create a sample collection with documents
+db.students.insertMany([
+    { name: "Amit Kumar", age: 20, city: "Delhi", courses: ["Math", "Science"], marks: 85 },
+    { name: "Sakshi Singh", age: 22, city: "Mumbai", courses: ["English", "History"], marks: 92 },
+    { name: "Ravi Patel", age: 23, city: "Chennai", courses: ["Math", "Geography"], marks: 78 },
+    { name: "Neha Verma", age: 21, city: "Delhi", courses: ["Science", "English"], marks: 88 },
+    { name: "Arjun Sharma", age: 24, city: "Kolkata", courses: ["Math", "Science"], marks: null }
+])
+
+
+
+// Retrieve all documents from the collection
+db.students.find()
+
+
+// Find one document and display only the name and city fields
+db.students.findOne({}, { name: 1, city: 1, _id: 0 })
+
+
+
+// query conditionals
+// Find students older than 21 years
+db.students.find({ age: { $gt: 21 } })
+
+
+
+// or query
+// Find students who are either from Delhi or Mumbai
+db.students.find({ $or: [{ city: "Delhi" }, { city: "Mumbai" }] })
+
+
+
+// not query
+// Find students who are not from Chennai
+db.students.find({ city: { $not: { $eq: "Chennai" } } })
+
+
+
+
+// type specific query 
+// Find students with marks field set to null (null)
+db.students.find({ marks: null })
+
+
+// Find students whose name starts with 'A' (regular)
+db.students.find({ name: { $regex: /^A/ } })
+
+
+// Find students who have enrolled in the "Math" course (querying arrays)
+db.students.find({ courses: "Math" })
+
+
+
+
+// where query
+
+// Use $where to find students older than 21 with marks greater than 80
+db.students.find({
+    $where: function() { return this.age > 21 && this.marks > 80; }
+})
+
+
+
+
+
+// cursor
+
+// Limit the results to 2 and sort by marks in descending order (sort and limit)
+db.students.find().sort({ marks: -1 }).limit(2)
+
+
+// Skip the first 2 documents and then display results (skip)
+db.students.find().skip(2)
+
+
+// Combine limit, skip, and sort to show specific results (advanced query options)
+db.students.find({ age: { $gte: 20 } }).sort({ age: 1 }).skip(1).limit(2)
