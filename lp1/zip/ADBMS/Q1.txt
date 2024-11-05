@@ -1,0 +1,50 @@
+// Step 1: Connect to MongoDB server
+use SitDB
+
+// Step 2: Create a collection "student" and insert a document using insertOne
+db.student.insertOne({
+  name: "John Doe",
+  class: "10th",
+  AY: "2023",
+  mobileNumber: "1234567890"
+})
+
+// Step 3: Insert multiple documents using insertMany
+db.student.insertMany([
+  {
+    name: "Jane Doe",
+    class: "12th",
+    AY: "2023",
+    mobileNumber: "9876543210"
+  },
+  {
+    name: "Bob Smith",
+    class: "11th",
+    AY: "2023",
+    mobileNumber: "5551112222"
+  }
+])
+
+// Step 4: Find documents in the collection using find
+db.student.find()
+
+// Step 5: Find one document using findOne
+db.student.findOne({ name: "John Doe" })
+
+// Step 6: Update one document using updateOne
+db.student.updateOne(
+  { name: "John Doe" },
+  { $set: { class: "11th" } }
+)
+
+// Step 7: Update multiple documents using updateMany
+db.student.updateMany(
+  { AY: "2023" },
+  { $set: { AY: "2024" } }
+)
+
+// Step 8: Delete one document using deleteOne
+db.student.deleteOne({ name: "Jane Doe" })
+
+// Step 9: Delete multiple documents using deleteMany
+db.student.deleteMany({ AY: "2024" })
