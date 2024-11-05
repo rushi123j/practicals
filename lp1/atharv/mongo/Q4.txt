@@ -1,0 +1,11 @@
+use a4
+
+db.demo_db.insertMany ( [ { city : "Toronto" , country : "Canada" }, { city : "Washington D.C." , country : 
+"United States" } , {city : "New Delhi" , country : "India" }, {city : "London" , country : "United Kingdom" } 
+])
+
+db.demo_db.find().limit(2)
+
+db.demo_db.find().skip(1)
+
+db.demo_db.find().sort({ city: -1 })

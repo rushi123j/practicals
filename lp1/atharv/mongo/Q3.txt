@@ -1,0 +1,19 @@
+
+use students
+ 
+db. createCollection ("studentgrades")
+ 
+db. studentgrades. insertMany ( [ {name: "Barry", subject: "Maths", score: 92}, 
+{name: "Kent", subject: "Physics", score: 87}, 
+{name: "Harry", subject: "Maths", score: 99, notes: "Exceptional Performance"},
+{name: "Alex", subject: "Literature", score: 78},
+{name: "Tom", subject: "History", score: 65, notes: "Adequate"}
+])
+
+db.studentgrades.find ({}, {_id: 0})
+
+db.studentgrades.createIndex({ score: 1 })
+
+db.studentgrades.getIndexes()
+
+db.studentgrades.dropIndex({ score: 1 })
